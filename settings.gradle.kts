@@ -13,4 +13,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "yuanshenlink"
-include ':app'
+include(":app")
