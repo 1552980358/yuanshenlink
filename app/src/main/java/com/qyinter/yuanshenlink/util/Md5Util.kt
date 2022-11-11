@@ -4,6 +4,11 @@ import java.math.BigInteger
 import java.security.MessageDigest
 
 object Md5Util {
+
+    private const val MESSAGE_DIGEST_MD5 = "MD5"
+    private const val MD5_MIN_LENGTH = 32
+    private const val MD5_FILLING = '0'
+
     /**
      * 对字符串 MD5 加密
      *
@@ -13,16 +18,16 @@ object Md5Util {
     fun getMD5(str: String): String? {
         try {
             // 生成一个MD5加密计算摘要
-            val md = MessageDigest.getInstance("MD5")
+            val md = MessageDigest.getInstance(MESSAGE_DIGEST_MD5)
             // 计算md5函数
             md.update(str.toByteArray())
             // digest()最后确定返回md5 hash值，返回值为8为字符串。因为md5 hash值是16位的hex值，实际上就是8位的字符
             // BigInteger函数则将8位的字符串转换成16位hex值，用字符串来表示；得到字符串形式的hash值
-            var result = BigInteger(1, md.digest()).toString(16)
-            while (result.length < 32) {
-                result = "0$result"
+            val result = BigInteger(1, md.digest()).toString(16)
+            return when {
+                result.length >= MD5_MIN_LENGTH -> result
+                else -> result.padStart(MD5_MIN_LENGTH, MD5_FILLING)
             }
-            return result
         } catch (e: Exception) {
             println(e)
         }
