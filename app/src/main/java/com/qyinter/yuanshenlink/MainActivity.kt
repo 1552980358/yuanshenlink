@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
 
     private companion object {
         const val MIHOYO_USER_URL = "https://user.mihoyo.com"
+        const val MESSAGE_CODE_SUCCESS = 200
     }
     
     private lateinit var binding: ActivityMainBinding
@@ -48,30 +49,30 @@ class MainActivity : AppCompatActivity() {
         val handle: Handler = object : Handler(Looper.getMainLooper()) {
             @SuppressLint("HandlerLeak")
             override fun handleMessage(msg: Message) {
-                //正常操作
-                msg.let {
-                    val obj: ChouKaObj = msg.obj as ChouKaObj
-                    if (obj.code == 200) {
+                // 防止类型转换失败
+                (msg.obj as? ChouKaObj)?.also { obj ->
+                    when (obj.code) {
+                        MESSAGE_CODE_SUCCESS -> {
+                            if (obj.urlListObj.size > 1) {
+                                val uidList = obj.urlListObj.map { it.uid }.toTypedArray()
 
-                        if (obj.urlListObj.size > 1) {
-                            val uidList = obj.urlListObj.map { it.uid }.toTypedArray()
-
-                            AlertDialog.Builder(this@MainActivity)
-                                .setIcon(R.drawable.ic_launcher_foreground)
-                                .setItems(uidList) { _, which ->
-                                    val selected = uidList[which]
-                                    obj.urlListObj.find { it.uid == selected }?.let {
-                                        copyToClipboard(it.url)
-                                    }
-                                    Toast.makeText(applicationContext, "你选择了Uid: $selected", Toast.LENGTH_SHORT).show()
-                            }.show()
-                        } else {
-                            copyToClipboard(obj.urlListObj[0].url)
+                                AlertDialog.Builder(this@MainActivity)
+                                    .setIcon(R.drawable.ic_launcher_foreground)
+                                    .setItems(uidList) { _, which ->
+                                        val selected = uidList[which]
+                                        obj.urlListObj.find { it.uid == selected }?.let {
+                                            copyToClipboard(it.url)
+                                        }
+                                        shortToast("你选择了Uid: $selected")
+                                    }.show()
+                            } else {
+                                copyToClipboard(obj.urlListObj[0].url)
+                            }
                         }
-                    } else {
-                        shortToast("请先登录米游社")
+                        else -> shortToast("请先登录米游社")
                     }
                 }
+
             }
         }
 
