@@ -20,6 +20,10 @@ import com.qyinter.yuanshenlink.dto.ChouKaObj
 import com.qyinter.yuanshenlink.http.HttpUtil
 
 class MainActivity : AppCompatActivity() {
+
+    private companion object {
+        const val MIHOYO_USER_URL = "https://user.mihoyo.com"
+    }
     
     private lateinit var binding: ActivityMainBinding
     private val webView: WebView
@@ -40,7 +44,7 @@ class MainActivity : AppCompatActivity() {
             domStorageEnabled = true
         }
 
-        webView.loadUrl("https://user.mihoyo.com")
+        webView.loadUrl(MIHOYO_USER_URL)
         val handle: Handler = object : Handler(Looper.getMainLooper()) {
             @SuppressLint("HandlerLeak")
             override fun handleMessage(msg: Message) {
@@ -73,7 +77,7 @@ class MainActivity : AppCompatActivity() {
 
         materialButton.setOnClickListener {
             val instance = CookieManager.getInstance()
-            val cookie = instance.getCookie("https://user.mihoyo.com")
+            val cookie = instance.getCookie(MIHOYO_USER_URL)
             HttpUtil.getAuthKey(cookie, handle)
         }
     }
