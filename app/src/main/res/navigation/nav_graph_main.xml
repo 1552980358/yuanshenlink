@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_main"
+    app:startDestination="@id/home">
+
+    <fragment
+        android:name="com.qyinter.yuanshenlink.ui.home.Home"
+        android:id="@+id/home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_home_to_api"
+            app:destination="@id/api" />
+    </fragment>
+
+    <fragment
+        android:name="com.qyinter.yuanshenlink.ui.api.API"
+        android:id="@+id/api"
+        tools:layout="@layout/fragment_api" />
+
+</navigation>

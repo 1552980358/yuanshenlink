@@ -4,3 +4,9 @@ plugins {
     id("com.android.library") version "7.3.0" apply false
     id("org.jetbrains.kotlin.android") version "1.7.10" apply false
 }
+
+buildscript {
+    dependencies {
+        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.5.3")
+    }
+}

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="md_spec_space_horizontal_8">8dp</dimen>
+    <dimen name="md_spec_space_vertical_8">8dp</dimen>
+
+</resources>

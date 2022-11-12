@@ -1,64 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    tools:context=".MainActivity">
 
-    <LinearLayout
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/nav_graph_main" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:text="第一步：登录米游社（登录页面可以滑动）"
-            android:textSize="16dp" />
-
-        <WebView
-            android:id="@+id/webview"
-            android:layout_width="match_parent"
-            android:layout_marginHorizontal="30dp"
-            android:layout_height="450dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:text="第二步：获取链接并复制到剪贴板"
-            android:textSize="16dp" />
-
-        <com.google.android.material.button.MaterialButtonToggleGroup
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginVertical="10dp">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/cookieBtn"
-                android:layout_width="100dp"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:text="点击获取并复制链接" />
-
-            <!--        <com.google.android.material.button.MaterialButton-->
-            <!--            android:id="@+id/showcookie"-->
-            <!--            android:layout_width="100dp"-->
-            <!--            android:layout_height="40dp"-->
-            <!--            android:text="然后显示抽卡链接"-->
-            <!--            android:layout_marginLeft="20dp"-->
-            <!--            android:layout_weight="1"-->
-            <!--            android:insetLeft="10dp" />-->
-        </com.google.android.material.button.MaterialButtonToggleGroup>
-
-        <EditText
-            android:id="@+id/input"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@null"
-            android:textSize="12dp" />
-
-    </LinearLayout>
-
-</ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
