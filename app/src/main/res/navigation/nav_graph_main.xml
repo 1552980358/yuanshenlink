@@ -13,11 +13,19 @@
         <action
             android:id="@+id/action_home_to_api"
             app:destination="@id/api" />
+        <action
+            android:id="@+id/action_home_to_web_view"
+            app:destination="@id/web_view" />
     </fragment>
 
     <fragment
         android:name="com.qyinter.yuanshenlink.ui.api.API"
         android:id="@+id/api"
         tools:layout="@layout/fragment_api" />
+
+    <fragment
+        android:name="com.qyinter.yuanshenlink.ui.webview.WebView"
+        android:id="@+id/web_view"
+        tools:layout="@layout/fragment_webview" />
 
 </navigation>

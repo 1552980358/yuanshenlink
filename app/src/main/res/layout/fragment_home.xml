@@ -25,6 +25,7 @@
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
             <com.google.android.material.button.MaterialButton
@@ -34,6 +35,14 @@
                 android:layout_marginHorizontal="@dimen/md_spec_space_horizontal_8"
                 android:text="@string/home_api"
                 android:transitionName="@string/api_transition_name" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/material_button_web_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/md_spec_space_horizontal_8"
+                android:text="@string/home_web_view"
+                android:transitionName="@string/web_view_transition_name" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

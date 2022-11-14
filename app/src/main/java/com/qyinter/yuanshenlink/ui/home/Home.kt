@@ -23,8 +23,10 @@ class Home: Fragment(), OnClickListener {
     private val materialToolbar: MaterialToolbar
         get() = binding.materialToolbar
 
-    private val materialButton: MaterialButton
+    private val apiButton: MaterialButton
         get() = binding.materialButtonApi
+    private val webViewButton: MaterialButton
+        get() = binding.materialButtonWebView
 
     private lateinit var navController: NavController
 
@@ -41,17 +43,21 @@ class Home: Fragment(), OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         (requireActivity() as AppCompatActivity).setSupportActionBar(materialToolbar)
-        materialButton.setOnClickListener(this)
+        apiButton.setOnClickListener(this)
+        webViewButton.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
         when (v) {
-            materialButton -> {
-                navController.navigate(
-                    HomeDirections.actionHomeToApi(),
-                    FragmentNavigatorExtras(materialButton to materialButton.transitionName)
-                )
-            }
+            apiButton -> navController.navigate(
+                HomeDirections.actionHomeToApi(),
+                FragmentNavigatorExtras(apiButton to apiButton.transitionName)
+            )
+
+            webViewButton -> navController.navigate(
+                HomeDirections.actionHomeToWebView(),
+                FragmentNavigatorExtras(webViewButton to webViewButton.transitionName)
+            )
         }
     }
 
