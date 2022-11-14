@@ -23,7 +23,7 @@ object AccountUtil {
     private fun request(url: String,
                         cookie: String,
                         requestMethod: String = REQUEST_GET,
-                        block: ((OutputStream) -> Unit)? = null) =
+                        block: ((BufferedOutputStream) -> Unit)? = null) =
         request(url, mapOf(REQUEST_LOGIN_TOKENS_COOKIE to cookie), requestMethod, block)
     
     private fun request(url: String,
