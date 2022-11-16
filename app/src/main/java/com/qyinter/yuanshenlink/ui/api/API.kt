@@ -38,7 +38,14 @@ class API: Fragment(), OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedElementEnterTransition = MaterialContainerTransform()
+        
+        // Fix MaterialToolbar blinking
+        sharedElementEnterTransition = MaterialContainerTransform().apply {
+            drawingViewId = R.id.root
+        }
+        sharedElementReturnTransition = MaterialContainerTransform().apply {
+            drawingViewId = R.id.material_button_api
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

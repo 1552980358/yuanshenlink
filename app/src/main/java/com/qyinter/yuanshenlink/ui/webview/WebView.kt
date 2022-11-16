@@ -15,7 +15,6 @@ import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import com.qyinter.yuanshenlink.R
 import com.qyinter.yuanshenlink.databinding.FragmentWebviewBinding
@@ -30,14 +29,18 @@ class WebView: Fragment() {
     private val binding: FragmentWebviewBinding
         get() = _binding!!
 
-    private val materialToolbar: MaterialToolbar
-        get() = binding.materialToolbar
     private val webView
         get() = binding.webView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedElementEnterTransition = MaterialContainerTransform()
+        
+        sharedElementEnterTransition = MaterialContainerTransform().apply {
+            drawingViewId = R.id.root
+        }
+        sharedElementReturnTransition = MaterialContainerTransform().apply {
+            drawingViewId = R.id.material_button_web_view
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -46,13 +49,11 @@ class WebView: Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        with(requireActivity() as AppCompatActivity) {
-            setSupportActionBar(materialToolbar)
-            addMenuProvider(object : MenuProvider {
+        (requireActivity() as AppCompatActivity).addMenuProvider(
+            object : MenuProvider {
                 override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                     menuInflater.inflate(R.menu.menu_web_view, menu)
                 }
-
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                     when (menuItem.itemId) {
                         R.id.refresh -> webView.reload()
@@ -60,8 +61,9 @@ class WebView: Fragment() {
                     }
                     return true
                 }
-            }, viewLifecycleOwner)
-        }
+            },
+            viewLifecycleOwner
+        )
 
         with(webView) {
             with(settings) {

@@ -20,9 +20,7 @@ class Home: Fragment(), OnClickListener {
     private var _binding: FragmentHomeBinding? = null
     private val binding: FragmentHomeBinding
         get() = _binding!!
-    private val materialToolbar: MaterialToolbar
-        get() = binding.materialToolbar
-
+    
     private val apiButton: MaterialButton
         get() = binding.materialButtonApi
     private val webViewButton: MaterialButton
@@ -42,7 +40,6 @@ class Home: Fragment(), OnClickListener {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        (requireActivity() as AppCompatActivity).setSupportActionBar(materialToolbar)
         apiButton.setOnClickListener(this)
         webViewButton.setOnClickListener(this)
     }
