@@ -7,9 +7,15 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.transition.platform.MaterialContainerTransform
@@ -22,11 +28,15 @@ class API: Fragment(), OnClickListener {
         private val PHONE_NUMBER_REGEX = "1[1-9][0-9]{9}".toRegex()
         private val EMAIL_NUMBER_REGEX = "([0-9a-z].)*[0-9a-z]+@[0-9a-z]{1,}.[a-z]+".toRegex()
     }
+    
+    private lateinit var navController: NavController
 
     private var _binding: FragmentApiBinding? = null
     private val binding: FragmentApiBinding
         get() = _binding!!
 
+    private val materialToolbar: MaterialToolbar
+        get() = binding.materialToolbar
     private val textInputLayoutTool: TextInputLayout
         get() = binding.textInputLayoutTool
     private val editTextTool: EditText
@@ -38,14 +48,8 @@ class API: Fragment(), OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
-        // Fix MaterialToolbar blinking
-        sharedElementEnterTransition = MaterialContainerTransform().apply {
-            drawingViewId = R.id.root
-        }
-        sharedElementReturnTransition = MaterialContainerTransform().apply {
-            drawingViewId = R.id.material_button_api
-        }
+        sharedElementEnterTransition = MaterialContainerTransform()
+        navController = findNavController()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -54,6 +58,13 @@ class API: Fragment(), OnClickListener {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        (requireActivity() as AppCompatActivity).apply {
+            setSupportActionBar(materialToolbar)
+        }
+        materialToolbar.setupWithNavController(
+            navController,
+            AppBarConfiguration(navController.graph)
+        )
         editTextTool.doOnTextChanged { text, _, _, _ ->
             text?.let {
                 when {
