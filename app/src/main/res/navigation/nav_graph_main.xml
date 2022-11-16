@@ -9,6 +9,7 @@
     <fragment
         android:name="com.qyinter.yuanshenlink.ui.home.Home"
         android:id="@+id/home"
+        android:label="@string/home_title"
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_home_to_api"
@@ -21,11 +22,13 @@
     <fragment
         android:name="com.qyinter.yuanshenlink.ui.api.API"
         android:id="@+id/api"
+        android:label="@string/api_title"
         tools:layout="@layout/fragment_api" />
 
     <fragment
         android:name="com.qyinter.yuanshenlink.ui.webview.WebView"
         android:id="@+id/web_view"
+        android:label="@string/home_web_view"
         tools:layout="@layout/fragment_webview" />
 
 </navigation>
