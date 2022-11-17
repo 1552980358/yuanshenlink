@@ -3,63 +3,56 @@ package com.qyinter.yuanshenlink.util
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.qyinter.yuanshenlink.util.Md5Util.getMD5
-import java.io.BufferedOutputStream
-import java.io.OutputStream
-import java.net.URL
 import java.net.URLEncoder
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.TimeUnit.SECONDS
-import javax.net.ssl.HttpsURLConnection
+import okhttp3.Headers.Companion.toHeaders
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 
 object AccountUtil {
-    
-    private const val REQUEST_GET = "GET"
-    private const val REQUEST_POST = "GET"
     
     private const val TIMEOUT_SECOND = 10L
     
     private const val REQUEST_LOGIN_TOKENS_COOKIE = "Cookie"
     
+    private val okHttpClient = OkHttpClient.Builder()
+        .connectTimeout(TIMEOUT_SECOND, TimeUnit.SECONDS)
+        .readTimeout(TIMEOUT_SECOND, TimeUnit.SECONDS)
+        .writeTimeout(TIMEOUT_SECOND, TimeUnit.SECONDS)
+        .build()
+    
     private fun request(url: String,
                         cookie: String,
-                        requestMethod: String = REQUEST_GET,
-                        block: ((BufferedOutputStream) -> Unit)? = null) =
-        request(url, mapOf(REQUEST_LOGIN_TOKENS_COOKIE to cookie), requestMethod, block)
+                        postContent: String? = null) =
+        request(url, mapOf(REQUEST_LOGIN_TOKENS_COOKIE to cookie), postContent)
     
     private fun request(url: String,
                         propertyMap: Map<String, String>,
-                        requestMethod: String = REQUEST_GET,
-                        block: ((BufferedOutputStream) -> Unit)? = null): String? {
-        var result: String? = null
-        (URL(url).openConnection() as? HttpsURLConnection)?.let {
-            it.requestMethod = requestMethod
-            TimeUnit.MILLISECONDS.convert(TIMEOUT_SECOND, SECONDS).toInt().let { timeout ->
-                it.connectTimeout = timeout
-                it.readTimeout = timeout
-            }
-            propertyMap.forEach { (key, value) ->
-                it.addRequestProperty(key, value)
-            }
-            it.doInput = true
-            it.doOutput = block != null
-            it.connect()
-            block?.invoke(BufferedOutputStream(it.outputStream))
-            result = it.inputStream.bufferedReader().readText()
-            it.disconnect()
-        }
-        return result
+                        postContent: String? = null): String? {
+        return okHttpClient.newCall(
+            Request.Builder()
+                .url(url)
+                .headers(propertyMap.toHeaders())
+                .apply {
+                    postContent?.let { post(it.toRequestBody("application/json;charset=utf-8".toMediaType())) }
+                }
+                .build()
+        ).execute().body?.string()
     }
     
     private const val JSON_DATA = "data"
     
     private const val JSON_DATA_ACCOUNT_INFO = "account_info"
-    private const val JSON_DATA_ACCOUNT_INFO_ACCOUNT_ID = "account_info"
+    private const val JSON_DATA_ACCOUNT_INFO_ACCOUNT_ID = "account_id"
     private const val JSON_DATA_ACCOUNT_INFO_WEB_LOGIN_TOKEN = "weblogin_token"
     private val urlLoginByCookie
         get() = "https://webapi.account.mihoyo.com/Api/login_by_cookie?t=${System.currentTimeMillis()}"
     /**
      * https://github.com/qyinter/yuanshenlink/blob/master/app/src/main/java/com/qyinter/yuanshenlink/http/OkHttpUtil.kt#L29
      **/
+    @JvmStatic
     fun requestLoginTokens(cookie: String): Account? {
         // uid => data.account_info.account_id
         // token_types => loginCookieData.data.account_info.weblogin_token
@@ -70,13 +63,15 @@ object AccountUtil {
         } catch (e: Exception) {
             return null
         }
-        
-        return Account(accountInfo[JSON_DATA_ACCOUNT_INFO_WEB_LOGIN_TOKEN].asString, accountInfo[JSON_DATA_ACCOUNT_INFO_ACCOUNT_ID].asString)
+        return Account(
+            accountInfo[JSON_DATA_ACCOUNT_INFO_ACCOUNT_ID].asString,
+            accountInfo[JSON_DATA_ACCOUNT_INFO_WEB_LOGIN_TOKEN].asString
+        )
     }
     
     private fun getUrlPrefixRequestTid(account: Account) =
-        "https://api-takumi.mihoyo.com/auth/api/getMultiTokenByLoginTicket?login_ticket=" +
-            "${account.token}&" +
+        "https://api-takumi.mihoyo.com/auth/api/getMultiTokenByLoginTicket?" +
+            "login_ticket=${account.token}&" +
             "token_types=3&" +
             "uid=${account.uid}"
         
@@ -96,7 +91,7 @@ object AccountUtil {
             return null
         }
         
-        return StringBuilder("stuid=${account.uid}").apply {
+        return StringBuilder("stuid=${account.uid};").apply {
             list.forEach {
                 append(
                     // name => data.list.name
@@ -151,7 +146,7 @@ object AccountUtil {
      * https://github.com/qyinter/yuanshenlink/blob/master/app/src/main/java/com/qyinter/yuanshenlink/http/OkHttpUtil.kt#L82
      **/
     fun requestAuthKey(userService: UserService, cookie: String): String? {
-        val jsonPost = with(JsonObject()) {
+        val jsonPost = JsonObject().apply {
             addProperty(AUTH_KEY_POST_DATA_KEY_AUTH_APPID, AUTH_KEY_POST_DATA_VALUE_AUTH_APPID)
             addProperty(AUTH_KEY_POST_DATA_KEY_GAME_BIZ, userService.gameBiz)
             addProperty(AUTH_KEY_POST_DATA_KEY_GAME_UID, userService.gameUid)
@@ -167,12 +162,9 @@ object AccountUtil {
             "DS" to ds,
             "Cookie" to cookie
         )
-        
         // authkey => data.authkey
         val authKeyData = try {
-            JsonParser.parseString(
-                request(URL_GET_AUTH_KEY, headers, REQUEST_POST) { it.write(jsonPost.encodeToByteArray()) }
-            ).asJsonObject
+            JsonParser.parseString(request(URL_GET_AUTH_KEY, headers, jsonPost)).asJsonObject
                 .getAsJsonObject(JSON_DATA)         // data
                 .get(JSON_DATA_AUTHKEY).asString    // authkey
         } catch (e: Exception) {
