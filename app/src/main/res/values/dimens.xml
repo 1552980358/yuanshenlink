@@ -3,5 +3,6 @@
 
     <dimen name="md_spec_space_horizontal_8">8dp</dimen>
     <dimen name="md_spec_space_vertical_8">8dp</dimen>
+    <dimen name="md_spec_card_corner_radius">12dp</dimen>
 
 </resources>

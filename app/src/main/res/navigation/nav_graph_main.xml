@@ -28,7 +28,7 @@
     <fragment
         android:name="com.qyinter.yuanshenlink.ui.webview.WebView"
         android:id="@+id/web_view"
-        android:label="@string/home_web_view"
+        android:label="@string/home_web_view_title"
         tools:layout="@layout/fragment_webview" />
 
 </navigation>
