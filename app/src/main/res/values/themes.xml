@@ -1,8 +1,10 @@
 <resources>
-    <!-- Base application theme. -->
-    <style name="Base.Theme.Yuanshenlink" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your theme here. -->
+    <style name="Base.AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="toolbarStyle">@style/Widget.App.Toolbar</item>
     </style>
 
-    <style name="Theme.Yuanshenlink" parent="Base.Theme.Yuanshenlink" />
+    <style name="AppTheme" parent="Base.AppTheme" />
+
+    <style name="Widget.App.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary" />
+
 </resources>

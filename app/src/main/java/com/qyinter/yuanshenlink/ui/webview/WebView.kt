@@ -22,7 +22,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import com.qyinter.yuanshenlink.MainViewModel
@@ -50,6 +52,8 @@ class WebView: Fragment() {
     private val binding: FragmentWebviewBinding
         get() = _binding!!
 
+    private val appBarLayout: AppBarLayout
+        get() = binding.appBarLayout
     private val swipeRefreshLayout: SwipeRefreshLayout
         get() = binding.swipeRefreshLayout
     private val webView
@@ -74,6 +78,7 @@ class WebView: Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        appBarLayout.statusBarForeground = MaterialShapeDrawable.createWithElevationOverlay(requireContext())
         (requireActivity() as AppCompatActivity).apply {
             setSupportActionBar(materialToolbar)
             addMenuProvider(
