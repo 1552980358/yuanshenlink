@@ -4,10 +4,15 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
 import com.qyinter.yuanshenlink.util.UserService
 
 class SelectAccountDialog(private val userServiceList: List<UserService>,
                           block: SelectAccountDialog.() -> Unit): DialogFragment() {
+    
+    companion object {
+        private const val TAG = "com.qyinter.yuanshenlink.ui.webview.SelectAccountDialog"
+    }
     
     private var positive: ((UserService) -> Unit)? = null
     private var negative: (() -> Unit)? = null
@@ -35,5 +40,7 @@ class SelectAccountDialog(private val userServiceList: List<UserService>,
             .setNegativeButton(android.R.string.cancel) { _, _ -> negative?.invoke() }
             .create()
     }
+    
+    fun show(fragmentManager: FragmentManager) = showNow(fragmentManager, TAG)
 
 }
