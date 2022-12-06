@@ -62,7 +62,8 @@ object AccountUtil {
                 .getAsJsonObject(JSON_DATA_ACCOUNT_INFO)    // account_info
         } catch (e: Exception) {
             return null
-        }
+        } ?: return null        // accountInfo may be a null here
+        
         return Account(
             accountInfo[JSON_DATA_ACCOUNT_INFO_ACCOUNT_ID].asString,
             accountInfo[JSON_DATA_ACCOUNT_INFO_WEB_LOGIN_TOKEN].asString
